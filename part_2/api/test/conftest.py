@@ -14,13 +14,14 @@ TEST_WORKER_QUEUE_NAME = "test-worker-queue"
 @pytest.fixture(scope="session", autouse=True)
 def worker_config():
     os.environ["REGION"] = "us-east-1"
+    os.environ["AWS_DEFAULT_REGION"] = "us-east-1"
     os.environ["ENDPOINT_URL"] = "http://moto:1234"
     os.environ["DEBTS_BUCKET_NAME"] = TEST_BUCKET_NAME
     os.environ["WORKER_QUEUE_URL"] = f"http://moto:1234/{TEST_WORKER_QUEUE_NAME}"
 
 
 @pytest.fixture(scope="session", autouse=True)
-def test_setup():
+def test_setup(worker_config):
     with mock_aws():
         # mock clients
         s3_client = boto3.client("s3")
